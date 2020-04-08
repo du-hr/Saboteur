@@ -8,15 +8,17 @@ import Saboteur.SaboteurBoardState;
 /** A player file submitted by a student. */
 public class StudentPlayer extends SaboteurPlayer {
 
-    /**
-     * You must modify this constructor to return your student number. This is
-     * important, because this is what the code that runs the competition uses to
-     * associate you with your agent. The constructor should do nothing else.
-     */
+
     public StudentPlayer() {
-        super("xxxxxxxxx");
+        super("260784819");
     }
 
+//let's make one each and we'll just delete the other's constructor before submitting!
+/*
+    public StudentPlayer() {
+*        super("xxxxxxxxx");
+*    }
+*/
     /**
      * This is the primary method that you need to implement. The ``boardState``
      * object contains the current state of the game, which your agent must use to
