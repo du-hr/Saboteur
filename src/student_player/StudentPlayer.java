@@ -10,7 +10,7 @@ public class StudentPlayer extends SaboteurPlayer {
 
 
     public StudentPlayer() {
-        super("260784819");
+        super("260784819 & 260776911");
     }
 
 //let's make one each and we'll just delete the other's constructor before submitting!
