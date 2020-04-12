@@ -19,7 +19,7 @@ public class StudentPlayer extends SaboteurPlayer {
     public static ArrayList<SaboteurCard> cards;
     public static int[] goldCoord = new int[]{-1, -1};
     public static int mapCount = 0;
-    public static int tilePlayedX;
+    public static boolean critical = false;
     public static final ArrayList<String> deadEndTileNames = new ArrayList<>() {
         {
             add("Tile:1");
@@ -85,7 +85,6 @@ public class StudentPlayer extends SaboteurPlayer {
         return moves.get(AIDecision(boardState));
     }
 
-    // simple greedy approach
     private int AIDecision(SaboteurBoardState boardState) {
         SaboteurCard cardSelected = null;
 
@@ -107,31 +106,14 @@ public class StudentPlayer extends SaboteurPlayer {
 
         // if not in malus state
         else {
-            // if the malus card is in hand, play it at once to reduce the chance of the random player messing up the path
-//            for (SaboteurCard card : cards) {
-//                if (card instanceof SaboteurMalus)
-//                    cardSelected = card;
-//            }
-//            if (cardSelected != null) {
-//                for (SaboteurMove mov : moves) {
-//                    if (mov.getCardPlayed().getName().equals(cardSelected.getName())) {
-//                        return moves.indexOf(mov);
-//                    }
-//                }
-//            }
-
-            // if no malus card in hand and the gold card has not yet been revealed
-//            else if (!goldTileRevealed){
+            // if the gold card has not yet been revealed
             if (!goldTileRevealed) {
-                // check if the map card is hand
+                // check if the map card is in hand
                 for (SaboteurCard card : cards) {
                     if (card instanceof SaboteurMap)
                         cardSelected = card;
                 }
                 if (cardSelected != null) {
-                    System.out.println("(12,3) :" + boardState.getBoardForDisplay()[12][3].getName());
-                    System.out.println("(12,5) :" + boardState.getBoardForDisplay()[12][5].getName());
-                    System.out.println("(12,7) :" + boardState.getBoardForDisplay()[12][7].getName());
                     // check for (12,3) (12,5)
                     if (boardState.getBoardForDisplay()[12][3].getName().equals("Tile:goalTile")) {
                         for (SaboteurMove mov : moves) {
@@ -156,16 +138,13 @@ public class StudentPlayer extends SaboteurPlayer {
                 for (SaboteurMove mov : moves) {
                     if (mov.getCardPlayed().getName().equals("Drop")) {
                         for (String dTile : deadEndTileNames) {
-//                            System.out.println("HERE!!!");
-//                            System.out.println(cards.get(mov.getPosPlayed()[0]).getName());
-//                            System.out.println(dTile);
                             if (cards.get(mov.getPosPlayed()[0]).getName().equals(dTile))
                                 return moves.indexOf(mov);
                         }
                     }
                 }
 
-                // destroy all dead end currently on the board
+                // destroy all dead end currently on the board below entrance
                 for (SaboteurCard card : cards) {
                     if (card instanceof SaboteurDestroy)
                         cardSelected = card;
@@ -174,23 +153,23 @@ public class StudentPlayer extends SaboteurPlayer {
                     for (SaboteurMove mov : moves) {
                         if (mov.getCardPlayed().getName().equals("Destroy")) {
                             for (String dTile : deadEndTileNames) {
-                                if (dTile.equals(boardState.getBoardForDisplay()[mov.getPosPlayed()[0]][mov.getPosPlayed()[1]].getName()))
+                                if (dTile.equals(boardState.getBoardForDisplay()[mov.getPosPlayed()[0]][mov.getPosPlayed()[1]].getName()) && mov.getPosPlayed()[0] > 5)
                                     return moves.indexOf(mov);
                             }
                         }
                     }
                 }
 
-
+                // perform simple greedy approach to go down
                 for (SaboteurMove mov : moves) {
-                    if (mov.getPosPlayed()[0] > 5) {
-                        if ((mov.getPosPlayed()[1] - goldCoord[1]) <= 7 && (mov.getPosPlayed()[1] - goldCoord[1]) >= 3)
+                    if (mov.getPosPlayed()[0] >= 5) {
+                        if (mov.getPosPlayed()[1] <= 7 && (mov.getPosPlayed()[1]  >= 3))
                             return moves.indexOf(mov);
                     }
                 }
             }
 
-            // no malus card in hand and gold location is known
+            // gold location is known
             else {
                 // discard map cards in hand
                 for (SaboteurCard card : cards) {
@@ -208,9 +187,6 @@ public class StudentPlayer extends SaboteurPlayer {
                 for (SaboteurMove mov : moves) {
                     if (mov.getCardPlayed().getName().equals("Drop")) {
                         for (String dTile : deadEndTileNames) {
-//                            System.out.println("HERE!!!");
-//                            System.out.println(cards.get(mov.getPosPlayed()[0]).getName());
-//                            System.out.println(dTile);
                             if (cards.get(mov.getPosPlayed()[0]).getName().equals(dTile))
                                 return moves.indexOf(mov);
                         }
@@ -223,7 +199,7 @@ public class StudentPlayer extends SaboteurPlayer {
                         .collect(Collectors.toList());
                 ArrayList<SaboteurTile> cardsOnBoard = new ArrayList<>(collection);
 
-                // destroy all dead end currently on the board
+                // destroy all dead end currently on the board below entrance
                 for (SaboteurCard card : cards) {
                     if (card instanceof SaboteurDestroy)
                         cardSelected = card;
@@ -232,27 +208,36 @@ public class StudentPlayer extends SaboteurPlayer {
                     for (SaboteurMove mov : moves) {
                         if (mov.getCardPlayed().getName().equals("Destroy")) {
                             for (String dTile : deadEndTileNames) {
-                                if (dTile.equals(boardState.getBoardForDisplay()[mov.getPosPlayed()[0]][mov.getPosPlayed()[1]].getName()))
+                                if (dTile.equals(boardState.getBoardForDisplay()[mov.getPosPlayed()[0]][mov.getPosPlayed()[1]].getName()) && mov.getPosPlayed()[0] > 5)
                                     return moves.indexOf(mov);
                             }
                         }
                     }
                 }
 
-                // greedy approach to the gold tile
-
-                for (SaboteurMove mov : moves) {
-                    // TODO: reaching the critical region.
-                    // TODO: use the malus card to reduce the chance of the random player messing up the path
-                    // TODO: reserve the + tile to the critical area
-                    if (mov.getPosPlayed()[0] > 5) {
-                        if (Math.abs(mov.getPosPlayed()[1] - goldCoord[1]) <= 1)
-                            return moves.indexOf(mov);
+                // not in critical region, performing simple greedy approach
+                if (!critical) {
+                    for (SaboteurMove mov : moves) {
+                        // TODO: reserve the + tile to the critical area
+                        if (mov.getPosPlayed()[0] > 5) {
+                            if (Math.abs(mov.getPosPlayed()[1] - goldCoord[1]) <= 1) {
+                                // reaching the critical region.
+                                if (mov.getPosPlayed()[0] > 9)
+                                    critical = true;
+                                return moves.indexOf(mov);
+                            }
+                        }
                     }
+                }
+                // in critical region
+                else{
+                    // TODO: use the malus card to reduce the chance of the random player messing up the path
                 }
             }
         }
-        return 0;
+
+        // default
+        return moves.size()/2;
     }
 
 }
