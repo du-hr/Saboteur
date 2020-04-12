@@ -8,6 +8,9 @@ import Saboteur.SaboteurPlayer;
 import Saboteur.SaboteurBoardState;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /** A player file submitted by a student. */
 public class StudentPlayer extends SaboteurPlayer {
@@ -127,7 +130,7 @@ public class StudentPlayer extends SaboteurPlayer {
                     System.out.println("(12,3) :"+boardState.getBoardForDisplay()[12][3].getName());
                     System.out.println("(12,5) :"+boardState.getBoardForDisplay()[12][5].getName());
                     System.out.println("(12,7) :"+boardState.getBoardForDisplay()[12][7].getName());
-                    // 3, 5, 7
+                    // check for (12,3) (12,5)
                     if (boardState.getBoardForDisplay()[12][3].getName().equals("Tile:goalTile")) {
                         for (SaboteurMove mov : moves) {
                             // use the map card at the hidden object at once
@@ -143,12 +146,6 @@ public class StudentPlayer extends SaboteurPlayer {
                                 mapCount++;
                                 return moves.indexOf(mov);
                             }
-                        }
-                    } else if (boardState.getBoardForDisplay()[12][7].getName().equals("Tile:goalTile")) {
-                        for (SaboteurMove mov : moves) {
-                            // use the map card at the hidden object at once
-                            if (mov.getCardPlayed().getName().equals(cardSelected.getName()) && mov.getPosPlayed()[1] == 7)
-                                return moves.indexOf(mov);
                         }
                     }
                 }
@@ -172,26 +169,44 @@ public class StudentPlayer extends SaboteurPlayer {
                 for (SaboteurMove mov : moves) {
                     if (mov.getCardPlayed().getName().equals("Drop")){
                         for (String dTile : deadEndTileNames){
-                            System.out.println("HERE!!!");
-                            System.out.println(cards.get(mov.getPosPlayed()[0]).getName());
-                            System.out.println(dTile);
+//                            System.out.println("HERE!!!");
+//                            System.out.println(cards.get(mov.getPosPlayed()[0]).getName());
+//                            System.out.println(dTile);
                             if (cards.get(mov.getPosPlayed()[0]).getName().equals(dTile))
                                 return moves.indexOf(mov);
                         }
                     }
                 }
-//                // destroy all dead end
-//                for (SaboteurCard card : cards) {
-//                    if (card instanceof SaboteurDestroy)
-//                        cardSelected = card;
-//                }
-//                if (cardSelected != null){
-//                    for (SaboteurMove mov : moves){
-//                        if (mov.getCardPlayed().getName().equals("Destroy"))
-//                    }
-//                }
+
+                // convert the cards on board to ArrayList
+                List<SaboteurTile> collection = Arrays.stream(boardState.getBoardForDisplay())
+                        .flatMap(Arrays::stream)
+                        .collect(Collectors.toList());
+                ArrayList<SaboteurTile> cardsOnBoard = new ArrayList<>(collection);
+
+                // destroy all dead end currently on the board
+                for (SaboteurCard card : cards) {
+                    if (card instanceof SaboteurDestroy)
+                        cardSelected = card;
+                }
+                if (cardSelected != null){
+                    for (SaboteurMove mov : moves){
+                        if (mov.getCardPlayed().getName().equals("Destroy")){
+                            for (String dTile : deadEndTileNames) {
+                                if (dTile.equals(boardState.getBoardForDisplay()[mov.getPosPlayed()[0]][mov.getPosPlayed()[1]].getName()))
+                                    return moves.indexOf(mov);
+                            }
+                        }
+                    }
+                }
 
                 // greedy approach to the gold tile
+
+                for (SaboteurMove mov : moves){
+                    if (mov.getPosPlayed()[1] >= 5){
+                        return moves.indexOf(mov);
+                    }
+                }
             }
         }
 
