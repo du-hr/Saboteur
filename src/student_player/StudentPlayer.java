@@ -107,20 +107,21 @@ public class StudentPlayer extends SaboteurPlayer {
         // if not in malus state
         else{
             // if the malus card is in hand, play it at once to reduce the chance of the random player messing up the path
-            for (SaboteurCard card : cards) {
-                if (card instanceof SaboteurMalus)
-                    cardSelected = card;
-            }
-            if (cardSelected != null) {
-                for (SaboteurMove mov : moves) {
-                    if (mov.getCardPlayed().getName().equals(cardSelected.getName())) {
-                        return moves.indexOf(mov);
-                    }
-                }
-            }
+//            for (SaboteurCard card : cards) {
+//                if (card instanceof SaboteurMalus)
+//                    cardSelected = card;
+//            }
+//            if (cardSelected != null) {
+//                for (SaboteurMove mov : moves) {
+//                    if (mov.getCardPlayed().getName().equals(cardSelected.getName())) {
+//                        return moves.indexOf(mov);
+//                    }
+//                }
+//            }
 
             // if no malus card in hand and the gold card has not yet been revealed
-            else if (!goldTileRevealed){
+//            else if (!goldTileRevealed){
+            if (!goldTileRevealed){
                 // check if the map card is hand
                 for (SaboteurCard card : cards) {
                     if (card instanceof SaboteurMap)
@@ -203,7 +204,8 @@ public class StudentPlayer extends SaboteurPlayer {
                 // greedy approach to the gold tile
 
                 for (SaboteurMove mov : moves){
-                    if (mov.getPosPlayed()[1] >= 5){
+                    if (mov.getPosPlayed()[0] > 5){
+                        if (Math.abs(mov.getPosPlayed()[1]-goldCoord[1]) <= 1)
                         return moves.indexOf(mov);
                     }
                 }
