@@ -16,6 +16,25 @@ public class StudentPlayer extends SaboteurPlayer {
     public static ArrayList<SaboteurCard> cards;
     public static int[] goldCoord = new int[]{-1,-1};
     public static int mapCount = 0;
+    public static final ArrayList<String> deadEndTileNames = new ArrayList<>() {
+        {
+            add("Tile:1");
+            add("Tile:2");
+            add("Tile:2_flip");
+            add("Tile:3");
+            add("Tile:3_flip");
+            add("Tile:4");
+            add("Tile:4_flip");
+            add("Tile:11");
+            add("Tile:11_flip");
+            add("Tile:12");
+            add("Tile:12_flip");
+            add("Tile:13");
+            add("Tile:14");
+            add("Tile:14_flip");
+            add("Tile:15");
+        }
+    };
 
     public StudentPlayer() {
 //        super("260784819"); // Cameron Cherif
@@ -97,8 +116,8 @@ public class StudentPlayer extends SaboteurPlayer {
                 }
             }
 
-            // if the gold card has not yet been revealed
-            if (!goldTileRevealed){
+            // if no malus card in hand and the gold card has not yet been revealed
+            else if (!goldTileRevealed){
                 // check if the map card is hand
                 for (SaboteurCard card : cards) {
                     if (card instanceof SaboteurMap)
@@ -135,7 +154,7 @@ public class StudentPlayer extends SaboteurPlayer {
                 }
             }
 
-            // gold location is known
+            // no malus card in hand and gold location is known
             else {
                 // discard map cards in hand
                 for (SaboteurCard card : cards) {
@@ -148,10 +167,35 @@ public class StudentPlayer extends SaboteurPlayer {
                             return moves.indexOf(mov);
                     }
                 }
+
+                // drop all dead end cards
+                for (SaboteurMove mov : moves) {
+                    if (mov.getCardPlayed().getName().equals("Drop")){
+                        for (String dTile : deadEndTileNames){
+                            System.out.println("HERE!!!");
+                            System.out.println(cards.get(mov.getPosPlayed()[0]).getName());
+                            System.out.println(dTile);
+                            if (cards.get(mov.getPosPlayed()[0]).getName().equals(dTile))
+                                return moves.indexOf(mov);
+                        }
+                    }
+                }
+//                // destroy all dead end
+//                for (SaboteurCard card : cards) {
+//                    if (card instanceof SaboteurDestroy)
+//                        cardSelected = card;
+//                }
+//                if (cardSelected != null){
+//                    for (SaboteurMove mov : moves){
+//                        if (mov.getCardPlayed().getName().equals("Destroy"))
+//                    }
+//                }
+
+                // greedy approach to the gold tile
             }
         }
 
-        return moves.indexOf(boardState.getRandomMove());
+        return 0;
     }
 
 }
