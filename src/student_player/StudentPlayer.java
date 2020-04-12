@@ -134,10 +134,26 @@ public class StudentPlayer extends SaboteurPlayer {
                     }
                 }
             }
+
+            // gold location is known
+            else {
+                // discard map cards in hand
+                for (SaboteurCard card : cards) {
+                    if (card instanceof SaboteurMap)
+                        cardSelected = card;
+                }
+                if (cardSelected != null){
+                    for (SaboteurMove mov : moves) {
+                        if (mov.getCardPlayed().getName().equals("Drop") && mov.getPosPlayed()[0] == cards.indexOf(cardSelected))
+                            return moves.indexOf(mov);
+                    }
+                }
+            }
         }
-        return 0;
+
+        return moves.indexOf(boardState.getRandomMove());
     }
-    
+
 }
 
 
