@@ -163,7 +163,7 @@ public class StudentPlayer extends SaboteurPlayer {
                 // perform simple greedy approach to go down
                 for (SaboteurMove mov : moves) {
                     if (mov.getPosPlayed()[0] >= 5) {
-                        if (mov.getPosPlayed()[1] <= 7 && (mov.getPosPlayed()[1]  >= 3))
+                        if (mov.getPosPlayed()[1] <= 7 && (mov.getPosPlayed()[1] >= 3))
                             return moves.indexOf(mov);
                     }
                 }
@@ -218,7 +218,9 @@ public class StudentPlayer extends SaboteurPlayer {
                 // not in critical region, performing simple greedy approach
                 if (!critical) {
                     for (SaboteurMove mov : moves) {
-                        // TODO: reserve the + tile to the critical area
+                        // reserve the + tile to the critical area
+                        if (mov.getCardPlayed().getName().equals("Tile:8"))
+                            continue;
                         if (mov.getPosPlayed()[0] > 5) {
                             if (Math.abs(mov.getPosPlayed()[1] - goldCoord[1]) <= 1) {
                                 // reaching the critical region.
@@ -230,17 +232,31 @@ public class StudentPlayer extends SaboteurPlayer {
                     }
                 }
                 // in critical region
-                else{
-                    // TODO: use the malus card to reduce the chance of the random player messing up the path
+                else {
+                    // if the malus card is in hand, play it at once to reduce the chance of the random player messing up the path
+                    for (SaboteurCard card : cards) {
+                        if (card instanceof SaboteurMalus)
+                            cardSelected = card;
+                    }
+                    if (cardSelected != null) {
+                        for (SaboteurMove mov : moves) {
+                            if (mov.getCardPlayed().getName().equals(cardSelected.getName())) {
+                                return moves.indexOf(mov);
+                            }
+                        }
+                    }
+
+                    for (SaboteurMove mov : moves) {
+                        if (mov.getPosPlayed()[0] > 5) {
+                            if (Math.abs(mov.getPosPlayed()[1] - goldCoord[1]) <= 1) {
+                                return moves.indexOf(mov);
+                            }
+                        }
+                    }
                 }
             }
         }
-
         // default
-        return moves.size()/2;
+        return moves.size() / 2;
     }
-
 }
-
-
-
