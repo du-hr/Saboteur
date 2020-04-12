@@ -1,39 +1,31 @@
 package student_player;
 
+import Saboteur.SaboteurMove;
 import boardgame.Move;
 
 import Saboteur.SaboteurPlayer;
 import Saboteur.SaboteurBoardState;
 
+import java.util.ArrayList;
+
 /** A player file submitted by a student. */
 public class StudentPlayer extends SaboteurPlayer {
-
-
     public StudentPlayer() {
-        super("260784819 & 260776911");
-    }
+//        super("260784819"); // Cameron Cherif
+        super("260776911"); // Haoran Du
+   }
 
-//let's make one each and we'll just delete the other's constructor before submitting!
-/*
-    public StudentPlayer() {
-*        super("xxxxxxxxx");
-*    }
-*/
     /**
      * This is the primary method that you need to implement. The ``boardState``
      * object contains the current state of the game, which your agent must use to
      * make decisions.
      */
+    @Override
+    // simple greedy approach
     public Move chooseMove(SaboteurBoardState boardState) {
-        // You probably will make separate functions in MyTools.
-        // For example, maybe you'll need to load some pre-processed best opening
-        // strategies...
-        MyTools.getSomething();
-
-        // Is random the best you can do?
-        Move myMove = boardState.getRandomMove();
-
-        // Return your move to be processed by the server.
-        return myMove;
+        System.out.println("student player acting as player number: "+boardState.getTurnPlayer());
+        ArrayList<SaboteurMove> moves = boardState.getAllLegalMoves();
+        return  moves.get(0);
     }
+
 }
