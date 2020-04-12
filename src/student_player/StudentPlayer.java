@@ -152,6 +152,36 @@ public class StudentPlayer extends SaboteurPlayer {
                     }
                 }
 
+                // drop all dead end cards
+                for (SaboteurMove mov : moves) {
+                    if (mov.getCardPlayed().getName().equals("Drop")) {
+                        for (String dTile : deadEndTileNames) {
+//                            System.out.println("HERE!!!");
+//                            System.out.println(cards.get(mov.getPosPlayed()[0]).getName());
+//                            System.out.println(dTile);
+                            if (cards.get(mov.getPosPlayed()[0]).getName().equals(dTile))
+                                return moves.indexOf(mov);
+                        }
+                    }
+                }
+
+                // destroy all dead end currently on the board
+                for (SaboteurCard card : cards) {
+                    if (card instanceof SaboteurDestroy)
+                        cardSelected = card;
+                }
+                if (cardSelected != null) {
+                    for (SaboteurMove mov : moves) {
+                        if (mov.getCardPlayed().getName().equals("Destroy")) {
+                            for (String dTile : deadEndTileNames) {
+                                if (dTile.equals(boardState.getBoardForDisplay()[mov.getPosPlayed()[0]][mov.getPosPlayed()[1]].getName()))
+                                    return moves.indexOf(mov);
+                            }
+                        }
+                    }
+                }
+
+
                 for (SaboteurMove mov : moves) {
                     if (mov.getPosPlayed()[0] > 5) {
                         if ((mov.getPosPlayed()[1] - goldCoord[1]) <= 7 && (mov.getPosPlayed()[1] - goldCoord[1]) >= 3)
