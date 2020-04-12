@@ -23,6 +23,7 @@ public class StudentPlayer extends SaboteurPlayer {
     public static int[][] hiddenCoordinates = {{12, 3}, {12, 5}, {12, 7}};
     public static boolean foundGold = false, justDiscarded = false;
     public static int numberOfCardsDiscarded = 0, numberOfTilesPlaced = 0;
+    public static ArrayList<String> discardable = new ArrayList<String>(Arrays.asList("1", "2", "2_flip", "3", "3_flip", "4", "4_flip", "10", "11", "11_flip", "12", "12_flip", "13", "14", "14_flip", "15"));
 
     /**
      * This is the primary method that you need to implement. The ``boardState``
@@ -41,7 +42,6 @@ public class StudentPlayer extends SaboteurPlayer {
         boolean hasMalus = boardState.getNbMalus(myTurn) > 0;
         SaboteurCard ownsMalus = null;
         ArrayList<SaboteurCard> hand = boardState.getCurrentPlayerCards();
-        ArrayList<String> discardable = new ArrayList<String>(Arrays.asList("1", "2", "2_flip", "3", "3_flip", "4", "4_flip", "10", "11", "11_flip", "12", "12_flip", "13", "14", "14_flip", "15"));
         //ArrayLists containing the index of cards in hand
         ArrayList<Integer> discardInHand = new ArrayList<>();
         ArrayList<Integer> usefulTiles = new ArrayList<>();
@@ -91,25 +91,32 @@ public class StudentPlayer extends SaboteurPlayer {
                 return (new SaboteurMove(hand.get(0), 0, 0, myTurn));
         }
         //Check if we are still at a turn where we can discard and get another card
-        if (canDiscard) {
+        else if (canDiscard) {
             double probabilityOfDiscarding = -Math.sqrt(boardState.getTurnNumber() + numberOfCardsDiscarded - numberOfTilesPlaced - discardInHand.size()) / 1764 + 1;
             double probabilityOfPlacing = Math.sqrt(boardState.getTurnNumber() - numberOfTilesPlaced + numberOfCardsDiscarded + usefulTiles.size())/1764;
             //choose whether to discard an undesired card probabilistically
+            //TODO: have to check if we can make any advantageous move, else just discard
+            //TODO: once we are able to do distance calculations, check if path close to gold
+            //                                                           if so, then check if have malus, if so use it, else MAKE a move
             if(probabilityOfDiscarding >= probabilityOfPlacing && justDiscarded==false && !discardInHand.isEmpty())
                 return(new SaboteurMove(hand.get(discardInHand.get(0)), 0, 0, myTurn));
             else{
-
+                //No card to discard, under no malus, no bonus to use, so make a move!!
+                //TODO: MAKE THE MOVE: 1- if gold known, towards gold. 2- if gold not known, towards closest unknown objective
             }
-
-        } else {
+        }
+        //Cannot discard anymore
+        else {
+            //Aggressive strategy chosen, if malus in hand and path close to gold, use it
             if (ownsMalus != null)
                 return (new SaboteurMove(ownsMalus, 0, 0, myTurn));
+            else{
+                //TODO:Check if we can make any advantageous move, if so: Make it. Else, if still have discardable cards, discard them
+            }
         }
 
-        System.out.println();
         MyTools.getSomething();
-
-        // Is random the best you can do?
+        //If all fails, just make a random move!
         Move myMove = boardState.getRandomMove();
 
         // Return your move to be processed by the server.
