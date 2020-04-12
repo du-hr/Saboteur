@@ -15,6 +15,7 @@ public class StudentPlayer extends SaboteurPlayer {
     public static ArrayList<SaboteurMove> moves;
     public static ArrayList<SaboteurCard> cards;
     public static int[] goldCoord = new int[]{-1,-1};
+    public static int mapCount = 0;
 
     public StudentPlayer() {
 //        super("260784819"); // Cameron Cherif
@@ -34,6 +35,11 @@ public class StudentPlayer extends SaboteurPlayer {
         cards = boardState.getCurrentPlayerCards();
 //        System.out.println("Testing: Board " + Arrays.deepToString(boardState.getHiddenBoard()));
 //        System.out.println("Testing: Board " + boardState.getBoardForDisplay()[12][3].getIdx());
+        if (mapCount == 2){
+            goldTileRevealed = true;
+            goldCoord[0] = 12;
+            goldCoord[1] = 7;
+        }
         if (boardState.getBoardForDisplay()[12][3].getName().equals("Tile:nugget") || boardState.getBoardForDisplay()[12][5].getName().equals("Tile:nugget") || boardState.getBoardForDisplay()[12][7].getName().equals("Tile:nugget")){
             goldTileRevealed = true;
             if (boardState.getBoardForDisplay()[12][3].getName().equals("Tile:nugget")) {
@@ -49,8 +55,8 @@ public class StudentPlayer extends SaboteurPlayer {
                 goldCoord[1] = 7;
             }
         }
-        for (SaboteurCard card : cards)
-            System.out.println("Testing: " + card.getName());
+        System.out.println(goldTileRevealed);
+        System.out.println(goldCoord[1]);
         for (SaboteurMove mov : moves)
             System.out.println("Testing: " + mov.toPrettyString());
         return moves.get(AIDecision(boardState));
@@ -104,21 +110,22 @@ public class StudentPlayer extends SaboteurPlayer {
                     System.out.println("(12,7) :"+boardState.getBoardForDisplay()[12][7].getName());
                     // 3, 5, 7
                     if (boardState.getBoardForDisplay()[12][3].getName().equals("Tile:goalTile")) {
-                        System.out.println("goes here!!!!!!");
                         for (SaboteurMove mov : moves) {
                             // use the map card at the hidden object at once
-                            if (mov.getCardPlayed().getName().equals(cardSelected.getName()) && mov.getPosPlayed()[1] == 3)
+                            if (mov.getCardPlayed().getName().equals(cardSelected.getName()) && mov.getPosPlayed()[1] == 3) {
+                                mapCount++;
                                 return moves.indexOf(mov);
+                            }
                         }
                     } else if (boardState.getBoardForDisplay()[12][5].getName().equals("Tile:goalTile")) {
-                        System.out.println("goes here!!!!!!");
                         for (SaboteurMove mov : moves) {
                             // use the map card at the hidden object at once
-                            if (mov.getCardPlayed().getName().equals(cardSelected.getName()) && mov.getPosPlayed()[1] == 5)
+                            if (mov.getCardPlayed().getName().equals(cardSelected.getName()) && mov.getPosPlayed()[1] == 5) {
+                                mapCount++;
                                 return moves.indexOf(mov);
+                            }
                         }
                     } else if (boardState.getBoardForDisplay()[12][7].getName().equals("Tile:goalTile")) {
-                        System.out.println("goes here!!!!!!");
                         for (SaboteurMove mov : moves) {
                             // use the map card at the hidden object at once
                             if (mov.getCardPlayed().getName().equals(cardSelected.getName()) && mov.getPosPlayed()[1] == 7)
@@ -130,24 +137,7 @@ public class StudentPlayer extends SaboteurPlayer {
         }
         return 0;
     }
-
-//
-////        // gold card is revealed
-////        else {
-////            System.out.println("Drop Map!!!!!!!!!");
-////            // drop all map cards in hand
-////            for (SaboteurCard card : cards) {
-////                if (card instanceof SaboteurMap)
-////                    cardSelected = card;
-////            }
-////            for (SaboteurMove mov : moves) {
-////                if (mov.getCardPlayed() instanceof SaboteurDrop && mov.getPosPlayed()[0] == cards.indexOf(cardSelected))
-////                    return moves.indexOf(mov);
-////            }
-////        }
-//
-//        // drop dead end cards in hand
-//        // greedy building the calculated path
+    
 }
 
 
