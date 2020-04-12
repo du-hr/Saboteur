@@ -243,12 +243,27 @@ public class StudentPlayer extends SaboteurPlayer {
                             }
                         }
                     }
-
-                    for (SaboteurMove mov : moves) {
-                        if (mov.getPosPlayed()[0] > 8) {
-                            if (Math.abs(mov.getPosPlayed()[1] - goldCoord[1]) <= 1) {
-                                return moves.indexOf(mov);
+                    // TODO the + and | tiles in the critical area has priority
+                    boolean hasTileVer = false;
+                    for (SaboteurCard card : cards){
+                        if (card.getName().equals("Tile:8") || card.getName().equals("Tile:0") || card.getName().equals("Tile:6") || card.getName().equals("Tile:6_flip")){
+                            hasTileVer = true;
+                            break;
+                        }
+                    }
+                    if (!hasTileVer) {
+                        for (SaboteurMove mov : moves) {
+                            if (mov.getPosPlayed()[0] > 8) {
+                                if (Math.abs(mov.getPosPlayed()[1] - goldCoord[1]) <= 1) {
+                                    return moves.indexOf(mov);
+                                }
                             }
+                        }
+                    }
+                    else{
+                        for (SaboteurMove mov : moves){
+                            if (mov.getPosPlayed()[0] > 8 && mov.getPosPlayed()[0] < 12 && Math.abs(mov.getPosPlayed()[1] - goldCoord[1]) <= 1 && (mov.getCardPlayed().getName().equals("Tile:8") || mov.getCardPlayed().getName().equals("Tile:0") || mov.getCardPlayed().getName().equals("Tile:6") || mov.getCardPlayed().getName().equals("Tile:6_flip") ))
+                                return moves.indexOf(mov);
                         }
                     }
                 }
