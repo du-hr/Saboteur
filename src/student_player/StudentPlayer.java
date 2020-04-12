@@ -56,8 +56,6 @@ public class StudentPlayer extends SaboteurPlayer {
         System.out.println("student player acting as player number: " + boardState.getTurnPlayer());
         moves = boardState.getAllLegalMoves();
         cards = boardState.getCurrentPlayerCards();
-//        System.out.println("Testing: Board " + Arrays.deepToString(boardState.getHiddenBoard()));
-//        System.out.println("Testing: Board " + boardState.getBoardForDisplay()[12][3].getIdx());
         if (mapCount == 2) {
             goldTileRevealed = true;
             goldCoord[0] = 12;
@@ -224,7 +222,7 @@ public class StudentPlayer extends SaboteurPlayer {
                         if (mov.getPosPlayed()[0] > 5) {
                             if (Math.abs(mov.getPosPlayed()[1] - goldCoord[1]) <= 1) {
                                 // reaching the critical region.
-                                if (mov.getPosPlayed()[0] > 9)
+                                if (mov.getPosPlayed()[0] > 8)
                                     critical = true;
                                 return moves.indexOf(mov);
                             }
@@ -247,7 +245,7 @@ public class StudentPlayer extends SaboteurPlayer {
                     }
 
                     for (SaboteurMove mov : moves) {
-                        if (mov.getPosPlayed()[0] > 5) {
+                        if (mov.getPosPlayed()[0] > 8) {
                             if (Math.abs(mov.getPosPlayed()[1] - goldCoord[1]) <= 1) {
                                 return moves.indexOf(mov);
                             }
