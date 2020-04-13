@@ -223,8 +223,8 @@ public class StudentPlayer extends SaboteurPlayer {
                 if (!critical) {
                     for (SaboteurMove mov : moves) {
                         // reserve the + tile to the critical area
-                        if (mov.getCardPlayed().getName().equals("Tile:8"))
-                            continue;
+//                        if (mov.getCardPlayed().getName().equals("Tile:8"))
+//                            continue;
                         if (mov.getPosPlayed()[0] > 5) {
                             if (Math.abs(mov.getPosPlayed()[1] - goldCoord[1]) <= 1) {
                                 // reaching the critical region.
