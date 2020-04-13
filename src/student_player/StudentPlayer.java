@@ -20,7 +20,7 @@ public class StudentPlayer extends SaboteurPlayer {
     public static int[] goldCoord = new int[]{-1, -1};
     public static int mapCount = 0;
     public static boolean critical = false;
-    public static final ArrayList<String> deadEndTileNames = new ArrayList<>() {
+    public static final ArrayList<String> deadEndTileNames = new ArrayList<String>() {
         {
             add("Tile:1");
             add("Tile:2");
