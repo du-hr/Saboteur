@@ -83,6 +83,12 @@ public class StudentPlayer extends SaboteurPlayer {
         return moves.get(AIDecision(boardState));
     }
 
+    /**
+     * General strategy: Modified Greedy Algorithm + aggro -> find gold asap, move whenever possible, block opponent if able to when getting
+     * close to the objective, and discard undesired cards when still able to draw to increase chances of having good hand
+     * for our strat, let's consider destroys like dead end tiles. There are in total 12/56 cards that are be discarded.
+     */
+
     private int AIDecision(SaboteurBoardState boardState) {
         SaboteurCard cardSelected = null;
 
