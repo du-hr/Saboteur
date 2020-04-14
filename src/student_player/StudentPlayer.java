@@ -43,25 +43,6 @@ public class StudentPlayer extends SaboteurPlayer {
     public static ArrayList<SaboteurCard> cards;
     public static int[] goldCoord = new int[]{-1, -1};
     public static boolean critical = false;
-    public static final ArrayList<String> deadEndTileNames = new ArrayList<>() {
-        {
-            add("Tile:1");
-            add("Tile:2");
-            add("Tile:2_flip");
-            add("Tile:3");
-            add("Tile:3_flip");
-            add("Tile:4");
-            add("Tile:4_flip");
-            add("Tile:11");
-            add("Tile:11_flip");
-            add("Tile:12");
-            add("Tile:12_flip");
-            add("Tile:13");
-            add("Tile:14");
-            add("Tile:14_flip");
-            add("Tile:15");
-        }
-    };
 
 
     public Move chooseMove(SaboteurBoardState boardState) {
@@ -126,7 +107,7 @@ public class StudentPlayer extends SaboteurPlayer {
                 return (new SaboteurMove(ownsMalus, 0, 0, myTurn));
             }else if (!discardInHand.isEmpty()){
                 justDiscarded = true;
-                return (new SaboteurMove(hand.get(discardInHand.get(0)), 0, 0, myTurn));
+                return (new SaboteurMove(hand.get(discardInHand.get(0).intValue()), 0, 0, myTurn));
             }else{
                 justDiscarded = true;
                 return (new SaboteurMove(hand.get(0), 0, 0, myTurn));
@@ -141,7 +122,7 @@ public class StudentPlayer extends SaboteurPlayer {
                 //choose whether to discard an undesired card probabilistically
                 if ((probabilityOfDiscarding >= probabilityOfPlacing && !justDiscarded && !discardInHand.isEmpty()) || usefulTiles.isEmpty()) {
                     justDiscarded = true;
-                    return (new SaboteurMove(hand.get(discardInHand.get(0)), 0, 0, myTurn));
+                    return (new SaboteurMove(hand.get(discardInHand.get(0).intValue()), 0, 0, myTurn));
                 }
             }
             //If cannot discard or chose not to, strategy divided in two cases
@@ -176,7 +157,7 @@ public class StudentPlayer extends SaboteurPlayer {
             //If makes it here, then no move made regardless of whether the gold location has been found
             if (!discardInHand.isEmpty()){
                 justDiscarded = true;
-                return (new SaboteurMove(hand.get(discardInHand.get(0)), 0, 0, myTurn));
+                return (new SaboteurMove(hand.get(discardInHand.get(0).intValue()), 0, 0, myTurn));
             }else{
                 justDiscarded = true;
                 return (new SaboteurMove(hand.get(0), 0, 0, myTurn));
@@ -210,7 +191,7 @@ public class StudentPlayer extends SaboteurPlayer {
                         }
                         if (!discardInHand.isEmpty()){
                             justDiscarded = true;
-                            return (new SaboteurMove(hand.get(discardInHand.get(0)), 0, 0, myTurn));
+                            return (new SaboteurMove(hand.get(discardInHand.get(0).intValue()), 0, 0, myTurn));
                         }else{
                             justDiscarded = true;
                             return (new SaboteurMove(hand.get(0), 0, 0, myTurn));
