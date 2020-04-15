@@ -1,0 +1,121 @@
+\documentclass[12pt,twoside,letterpaper]{article}
+%NOTE: This report format is
+\usepackage{lipsum}
+\bibliographystyle{plain}
+\newenvironment{longlisting}{\captionsetup{type=listing}}{}
+
+% include files that load packages and define macros
+\input{includes} % various packages needed for maths etc.
+\input{notation} % short-hand notation and macros
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+% front page
+\input{titlepage}
+%%%%%%%%%%%%%%%%%%%%%%%%%%% table of content
+%If a table of content is needed, simply uncomment the following lines
+\tableofcontents
+\newpage
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Main document
+\section{Introduction}
+\lipsum
+\clearpage
+
+\section{Technical Approach}
+\subsection{Description and Theoretical Basis}
+\lipsum
+\clearpage
+
+\subsection{Code Implementation}
+The VHDL description of the synchronous 8-bit counter can be seen in Listing \ref{8bitcounter}.
+\begin{longlisting}
+\begin{minted}
+[escapeinside=||,
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+linenos,
+bgcolor=LightGray]
+{vhdl}
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+entity g03_lab1 is
+    Port(       clk         :in std_logic; |\label{clk}|
+                countbytwo  :in std_logic;
+                rst         :in std_logic;
+                enable      :in std_logic;
+                output      :out std_logic_vector(7 downto 0));
+end g03_lab1;
+
+architecture lab1 of g03_lab1 is
+signal count: std_logic_vector (7 downto 0);
+    begin
+    process(clk) |\label{sl}|
+        begin
+        if (rising_edge(clk)) then |\label{rising}|
+            if (rst = '1') then |\label{reset}|
+                count <= "00000000";
+            elsif (enable = '1' ) then |\label{enable}|
+                if (countbytwo = '0') then
+                    if (count = "11111111") then |\label{over1}|
+                        count <= "00000000";
+                    else
+                        count <= count + 1;
+                    end if;
+                else
+                    if (count = "11111110") then |\label{over2}|
+                        count <= "00000000";
+                    else
+                        count <= count +2;
+                    end if;
+                end if;
+            end if;
+        end if;
+    end process;
+
+output <= count;
+
+end architecture;
+\end{minted}
+\caption{Synchronous Dual Rate Counter in VHDL}
+\label{8bitcounter}
+\end{longlisting}
+\par The counting logic is in the architecture block is summarized as following:
+\begin{enumerate}
+  \item To make the counter reset synchronous, only one parameter 'clk' (decalred in Line \ref{clk}) is included in the sensitivity list of the process block in Line \ref{sl}.
+  \item A conditional statement in Line \ref{rising} ensures that the counter logic only executes on the rising clock edge.
+  \item The reset bit is checked in Line \ref{reset}. If it is high, the counter is reset to zero.
+  \item The enable bit is verified in Line \ref{enable} before checking the counter step size.
+  \item In Line \ref{over1} and \ref{over2}, we check if the the counter reaches the maximum value allowed in the respective rate. If that is the case, the counter is reset to zero.
+  \item The output would always be even if the rate is 2-bit since the counter adds 2 to itself every time there is a rising-edge clock signal.
+\end{enumerate}
+\clearpage
+
+\subsection{Justification and Motivation for the Approach}
+\lipsum
+\clearpage
+
+\section{Summary of Result}
+\subsection{Satisfaction of the Project Specification}
+\subsection{Success Rate}
+\clearpage
+
+\section{Reflect upon the Approach}
+\lipsum
+\clearpage
+
+\section{Future Improvements}
+\lipsum
+\vfill
+\section*{Students' contributions}
+Both of student partners worked together to understand the problem and write the code in this project.
+\end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
