@@ -1,0 +1,13 @@
+# Server version 0.08 running on localhost:8123
+# Game ID: 184
+# Board class: Saboteur.SaboteurBoard
+# Timeout: 20000
+# First Move Timeout: 30000
+# Date: Sun Apr 12 14:39:22 EDT 2020
+# Starting at move 43
+# Player 1: Player-0, '260776911', running on localhost
+# Player 2: Player-1, 'RandomPlayer', running on localhost
+START Player-0 260776911
+START Player-1 RandomPlayer
+GAMEOVER SERVER ERROR UNDECIDED
+# Game ended: Sun Apr 12 14:39:22 EDT 2020

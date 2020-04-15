@@ -1,0 +1,68 @@
+# Server version 0.08 running on client.openvpn.net:8123
+# Game ID: 253
+# Board class: Saboteur.SaboteurBoard
+# Timeout: 20000
+# First Move Timeout: 30000
+# Date: Sun Apr 12 19:08:18 EDT 2020
+# Player 1: Player-0, '260776911', running on client.openvpn.net
+# Player 2: Player-1, 'RandomPlayer', running on client.openvpn.net
+START Player-0 260776911
+START Player-1 RandomPlayer
+BoardInit:Tile:8,Tile:8,Tile:9,Tile:9,Tile:2,Bonus,Map,Tile:9,Tile:12,Tile:5,Tile:3,Map,Destroy,Tile:5,Destroy,Tile:7,Tile:11,Destroy,Tile:5,Tile:7,Tile:9,Tile:10,Tile:6,Tile:8,Tile:0,Map,Malus,Malus,Tile:6,Tile:10,Tile:5,Tile:6,Map,Tile:15,Tile:0,Tile:7,Bonus,Bonus,Tile:14,Tile:7,Tile:13-Tile:8,Map,Tile:0,Tile:0,Tile:6,Tile:9,Tile:10-Tile:1,Bonus,Tile:8,Tile:7,Map,Tile:4,Tile:6-Tile:hidden1,Tile:nugget,Tile:hidden2
+Tile:9 4 5 1
+Map 12 3 0
+Tile:6 4 6 1
+Drop 0 0 0
+Tile:0 3 6 1
+Drop 3 0 0
+Tile:9 2 6 1
+Tile:8 5 6 0
+Tile:8 4 4 1
+Tile:7 5 4 0
+Tile:2_flip 6 5 1
+Tile:6 5 7 0
+Tile:12_flip 4 7 1
+Map 12 5 0
+Tile:10 2 5 1
+Tile:9 6 4 0
+Destroy 4 4 1
+Tile:9_flip 7 4 0
+Map 12 5 1
+Destroy 6 5 0
+Tile:3 6 7 1
+Tile:5_flip 6 5 0
+Map 12 3 1
+Tile:7_flip 7 5 0
+Tile:11 4 4 1
+Tile:5_flip 8 5 0
+Tile:8 6 8 1
+Drop 6 0 0
+Tile:0 7 8 1
+Tile:10 8 4 0
+Destroy 2 5 1
+Tile:8 6 3 0
+Tile:5_flip 8 8 1
+Tile:10 6 2 0
+Tile:6_flip 7 3 1
+Drop 6 0 0
+Tile:9 8 7 1
+Tile:7 8 6 0
+Tile:5 4 3 1
+Tile:6_flip 7 6 0
+Drop 4 0 1
+Tile:7_flip 6 9 0
+Drop 0 0 1
+Tile:7 8 3 0
+Tile:13 2 7 1
+Malus 0 0 0
+Map 12 5 1
+Tile:8 9 7 0
+Drop 0 0 1
+Drop 1 0 0
+Drop 0 0 1
+Drop 1 0 0
+Bonus 0 0 1
+Drop 0 0 0
+Tile:14_flip 2 5 1
+GAMEOVER DRAW
+# Game ended: Sun Apr 12 19:08:18 EDT 2020
