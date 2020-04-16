@@ -117,14 +117,14 @@ There were several other methods that were discussed before we started writing t
 \end{enumerate}
 \subsection{Theoretical Basis}
 \subsubsection{Hill Climbing}
-sdafdsafdsfasd
+ Hill climbing is a very powerful method using greedy algorithm to determine the local optimization of a problem. It basically compares the outcome of all its available neighbors and choose the best among them. It has the problem of stuck in a local maximum. In this project, all the cards in hand of the agent is considered neighbors. We used the local greedy search to choose the one that has the best chance to reaching down to the (potential) gold location. The details can be seen in Listing \ref{simple} and \ref{enhanced}.
 \subsubsection{Simulated Annealing}
+Simulated Annealing is an improved version of Hill Climbing. It allows random non-greedy moves to escape the local maximum. In out problem, the default return move is chosen randomly from the list of all moves available. Also, the malus card is only used once inside the critical region, which is a form let the random player doing the process of Simulated Annealing.
 \subsubsection{Divide and Conquer}
-\clearpage
+A divide-and-conquer algorithm works by recursively breaking down a problem into sub-problems, until these become simple enough to be solved directly. The solutions to the sub-problems are then combined to give a solution to the original problem. In this project, the use of the critical region divides the game into two sub-problems. The first one is that when being outside the critical region, we allow bad moves and simply going down using Listing \ref{simple}. The second one is that when being inside the critical region, we use a more dedicated approach to move as close and as fast to the gold tile as possible. This idea of Divide and Conquer makes the solution easier to approach.
 
 \section{Summary of Result}
-\subsection{Satisfaction of the Project Specification}
-\subsection{Success Rate}
+The result we obtained was satisfactory. We achieved a success rate of 33.33\% from our over 300 rounds of testing. we have satisfied all the requirements from the project specification document. The RAM we used is lower than 500 MB. The calculating time of our algorithm is smaller than 2 seconds. We did not use File I/O in out program.
 \clearpage
 
 \section{Reflect upon the Approach}
