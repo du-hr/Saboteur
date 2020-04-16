@@ -21,86 +21,21 @@
 \newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% Main document
-\section{Abstract}
-The project is based on a on a specific version of a card game called Saboteur, which was first introduced back in 2004. In this version, there are 4 types of cards available, namely Tile, Malus, Bonus, Destroy, and Map, on a  restricted board of size (15,15). The goal of the project is to implement a computer agent with artificial intelligence called \mintinline{java}{StudentPlayer}, which is defined in \newline
-\mintinline{java}{public class StudentPlayer extends SaboteurPlayer}.
-\par Our strategy is a modified version of the local greedy search algorithm to head towards the gold nugget objectives, which is based on the knowledge of Hill Climbing and Local Optimization we learned in class. In addition, an idea of aggressive approach was also included. In short, our general strategy is to use the Map cards to find the location of the goal, drop cards that are deemed "discard-able" along the way (to maximize the chances of having a favourable hand), use the Malus cards aggressively whenever appropriate, and build a path with the best Tile card in hand, determined by the Local Optimization search, towards the goal.
+\section{Introduction}
+The project is based on a on a specific version of a card game called Saboteur, which was originally introduced back in 2004. In this version, there are 5 types of cards available, namely Tile, Malus, Bonus, Destroy, and Map, on a  restricted board of size (15,15). The goal of the project is to implement a computer agent with artificial intelligence called \mintinline{java}{StudentPlayer} defined in \mintinline{java}{public class StudentPlayer extends SaboteurPlayer}. \\ The AI agent is supposed to beat another predefined agent whose move in the game is set to be random.
 \par There are many constrains to our project, both from the scope of the project itself and several external factors. In the end, the result we obtained was satisfactory. We had a success rate of 33.33\% from our testing rounds of play and we have satisfied all the requirements from the project specification document.
-\clearpage
 
 \section{Technical Approach}
-\subsection{Description and Theoretical Basis}
-\lipsum
-\clearpage
-
-\subsection{Code Implementation}
-The VHDL description of the synchronous 8-bit counter can be seen in Listing \ref{8bitcounter}.
-\begin{longlisting}
-\begin{minted}
-[escapeinside=||,
-frame=lines,
-framesep=2mm,
-baselinestretch=1.2,
-linenos,
-bgcolor=LightGray]
-{vhdl}
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.STD_LOGIC_UNSIGNED.ALL;
-entity g03_lab1 is
-    Port(       clk         :in std_logic; |\label{clk}|
-                countbytwo  :in std_logic;
-                rst         :in std_logic;
-                enable      :in std_logic;
-                output      :out std_logic_vector(7 downto 0));
-end g03_lab1;
-
-architecture lab1 of g03_lab1 is
-signal count: std_logic_vector (7 downto 0);
-    begin
-    process(clk) |\label{sl}|
-        begin
-        if (rising_edge(clk)) then |\label{rising}|
-            if (rst = '1') then |\label{reset}|
-                count <= "00000000";
-            elsif (enable = '1' ) then |\label{enable}|
-                if (countbytwo = '0') then
-                    if (count = "11111111") then |\label{over1}|
-                        count <= "00000000";
-                    else
-                        count <= count + 1;
-                    end if;
-                else
-                    if (count = "11111110") then |\label{over2}|
-                        count <= "00000000";
-                    else
-                        count <= count +2;
-                    end if;
-                end if;
-            end if;
-        end if;
-    end process;
-
-output <= count;
-
-end architecture;
-\end{minted}
-\caption{Synchronous Dual Rate Counter in VHDL}
-\label{8bitcounter}
-\end{longlisting}
-\par The counting logic is in the architecture block is summarized as following:
-\begin{enumerate}
-  \item To make the counter reset synchronous, only one parameter 'clk' (decalred in Line \ref{clk}) is included in the sensitivity list of the process block in Line \ref{sl}.
-  \item A conditional statement in Line \ref{rising} ensures that the counter logic only executes on the rising clock edge.
-  \item The reset bit is checked in Line \ref{reset}. If it is high, the counter is reset to zero.
-  \item The enable bit is verified in Line \ref{enable} before checking the counter step size.
-  \item In Line \ref{over1} and \ref{over2}, we check if the the counter reaches the maximum value allowed in the respective rate. If that is the case, the counter is reset to zero.
-  \item The output would always be even if the rate is 2-bit since the counter adds 2 to itself every time there is a rising-edge clock signal.
-\end{enumerate}
-\clearpage
-
-\subsection{Justification and Motivation for the Approach}
-\lipsum
+\subsection{Description}
+Our strategy is a modified version of the local greedy search algorithm to head towards the gold nugget objectives, which is based on the knowledge of Hill Climbing and Local Optimization we learned in class. In short, our general strategy is to use the Map cards to find the location of the goal, drop cards that are deemed discardable along the way (to maximize the chances of having a favourable hand), use the Malus cards aggressively whenever appropriate, and build a path with the best Tile card in hand, determined by the Local Optimization search, towards the goal.
+\par In addition, an idea of aggressive approach was also included.
+\par critical region
+1.2.3.4 list below with code short
+\subsection{Motivation}
+The motivation behind this approach is mainly due to the composition of the deck. There is a total of 56 cards distributed among the players, both starting with 7 cards. Thus, there are only 46 turns, or 23 rounds to discard cards that do not fit one's strategy. Furthermore, only two "Malus" cards are present in the deck, for twice as many "Bonus" cards, therefore increasing the chances of countering a "Malus", which is unfavourable for an aggressive strategy. However, 6 "Map" cards are in the deck, thus composing almost a ninth of the deck, favouring a "rushing" strategy. Three "Destroy" cards can also compose the deck, which allow the destruction of a tile placed on the board, favourable for path building when one of the 9 dead-end tiles available in the deck are placed. The remaining 28 cards are "tunnel tiles" permitting route building in various directions.
+\subsection{Theoretical Basis}
+\subsubsection{Local Optimization Search}
+\subsubsection{Constraint Satisfaction Problem (CSP)}
 \clearpage
 
 \section{Summary of Result}
