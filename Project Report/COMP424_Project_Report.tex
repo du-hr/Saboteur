@@ -3,7 +3,7 @@
 \usepackage{lipsum}
 \bibliographystyle{plain}
 \newenvironment{longlisting}{\captionsetup{type=listing}}{}
-
+\setlength{\parskip}{1em}
 % include files that load packages and define macros
 \input{includes} % various packages needed for maths etc.
 \input{notation} % short-hand notation and macros
@@ -21,8 +21,11 @@
 \newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% Main document
-\section{Introduction}
-\lipsum
+\section{Abstract}
+The project is based on a on a specific version of a card game called Saboteur, which was first introduced back in 2004. In this version, there are 4 types of cards available, namely Tile, Malus, Bonus, Destroy, and Map, on a  restricted board of size (15,15). The goal of the project is to implement a computer agent with artificial intelligence called \mintinline{java}{StudentPlayer}, which is defined in \newline
+\mintinline{java}{public class StudentPlayer extends SaboteurPlayer}.
+\par Our strategy is a modified version of the local greedy search algorithm to head towards the gold nugget objectives, which is based on the knowledge of Hill Climbing and Local Optimization we learned in class. In addition, an idea of aggressive approach was also included. In short, our general strategy is to use the Map cards to find the location of the goal, drop cards that are deemed "discard-able" along the way (to maximize the chances of having a favourable hand), use the Malus cards aggressively whenever appropriate, and build a path with the best Tile card in hand, determined by the Local Optimization search, towards the goal.
+\par There are many constrains to our project, both from the scope of the project itself and several external factors. In the end, the result we obtained was satisfactory. We had a success rate of 33.33\% from our testing rounds of play and we have satisfied all the requirements from the project specification document.
 \clearpage
 
 \section{Technical Approach}
