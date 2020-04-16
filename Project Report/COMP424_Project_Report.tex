@@ -27,15 +27,98 @@ The project is based on a on a specific version of a card game called Saboteur, 
 
 \section{Technical Approach}
 \subsection{Description}
-Our strategy is a modified version of the local greedy search algorithm to head towards the gold nugget objectives, which is based on the knowledge of Hill Climbing and Local Optimization we learned in class. In short, our general strategy is to use the Map cards to find the location of the goal, drop cards that are deemed discardable along the way (to maximize the chances of having a favourable hand), use the Malus cards aggressively whenever appropriate, and build a path with the best Tile card in hand, determined by the Local Optimization search, towards the goal.
-\par In addition, an idea of aggressive approach was also included.
-\par critical region
-1.2.3.4 list below with code short
+Our strategy is a modified version of the Local Optimization Search to head towards the gold nugget objectives, which is based on the knowledge of Hill Climbing and Simulated Annealing we learned in class. In short, our general strategy is to use the Map cards to find the location of the goal, drop cards that are deemed discardable along the way (to maximize the chances of having a favourable hand), and build a path with the best Tile card in hand, determined by the Local Optimization search, towards the goal.
+\par There is also an idea of critical region which was integrated in the approach. The critical region in the game is defined to be the area below row 8. Inside the region, since it is close to the target, a special aggressive approach was chosen as using the Malus card whenever possible to reduce the winning possibility of the enemy. Thus, the setup of the critical region was not only to ensure that there are enough cards to build a path to the gold nugget with the help of the cards from the enemy in the beginning, but also to steer the enemy away from winning on the path we built or blocked the path.
+\newpage
+\par The details of our approach is listed below in the same order as the logic of our \mintinline{java}{StudentPlayer} class:
+\begin{enumerate}
+  \item Check if the enemy has played a Malus upon the player. If yes, use the the Bonus card in hand if possible.
+  \item If the location of gold nugget is still unknown, use the Map card in in hand if possible.
+  \item Drop the dead-end Tile cards in hand if possible to maximize the chances of having a hand of more utility.
+  The dead-end Tile cards are defined as in \newline
+  \mintinline{java}{public static final ArrayList<String> deadEndTileNames} \newline
+  in the class constructor.
+  The reason for this discarding move is based on the fact the enemy is completely in random. Hence, we believe it is better to discard those cards in exchange of a potential better hand rather than use those to block the path of the other, since the latter also increases the chance polluting the potential path down to the goal. The over 300 runs of the game we ran proved our prediction.
+  \item Use the Destroy cards in hand if possible to destroy all dead-end Tile cards currently on the board below the entrance. This is to maximize the chance of successfully reaching down to row 12.
+  \item Check the previous conditions. If there is still no viable option available, do as in Listing \ref{simple}:
+  \begin{longlisting}
+    \begin{minted}
+      [escapeinside=||,
+      frame=lines,
+      framesep=2mm,
+      baselinestretch=1.2,
+      linenos,
+      bgcolor=LightGray]
+      {java}
+for (SaboteurMove mov : moves) {
+  if (mov.getPosPlayed()[0] >= 5) {
+    if (mov.getPosPlayed()[1] <= 7 && (mov.getPosPlayed()[1] >= 3))
+      return moves.indexOf(mov);
+  }
+}
+  \end{minted}
+  \caption{A simple greedy approach when the gold location is unknown.}
+  \label{simple}
+  \end{longlisting}
+  \item Repeat previous steps until the gold nugget location is revealed.
+  \item Once the gold location is known, discard the Map cards in hand.
+  \item Check if the cards has reached down to the critical region (below row 8). If not, perform simple greedy approach in Listing \ref{simple}.
+  \item If reached the critical region, play the Malus card in hand at once. As stated before, this is a special aggressive approach to reduce the winning possibility of the enemy and to reduce the chance that the planned path is being blocked a dead-end Tile.
+  \item Next, perform enhanced greedy algorithm in Listing \ref{enhanced} where playing the cross-shape and vertical-stroke shape Tile cards has higher preference in the move.
+  \begin{longlisting}
+    \begin{minted}
+      [escapeinside=||,
+      frame=lines,
+      framesep=2mm,
+      baselinestretch=1.2,
+      linenos,
+      bgcolor=LightGray]
+      {java}
+      // the + and | tiles in the critical area have priority
+      boolean hasTileVer = false;
+      for (SaboteurCard card : cards){
+          if (card.getName().equals("Tile:8") ||
+          card.getName().equals("Tile:0")||
+          card.getName().equals("Tile:6")||
+          card.getName().equals("Tile:6_flip")){
+              hasTileVer = true;
+              break;
+          }
+      }
+      if (!hasTileVer) {
+          for (SaboteurMove mov : moves) {
+              if (mov.getPosPlayed()[0] > 8) {
+                  if (Math.abs(mov.getPosPlayed()[1] - goldCoord[1]) <= 1)
+                      return moves.indexOf(mov);
+              }
+          }}
+      else{
+          for (SaboteurMove mov : moves){
+              if (mov.getPosPlayed()[0] > 8 && mov.getPosPlayed()[0] < 12
+              && Math.abs(mov.getPosPlayed()[1] - goldCoord[1]) <= 1
+              && (mov.getCardPlayed().getName().equals("Tile:8")||
+              mov.getCardPlayed().getName().equals("Tile:0")||
+              mov.getCardPlayed().getName().equals("Tile:6")||
+              mov.getCardPlayed().getName().equals("Tile:6_flip") ))
+                  return moves.indexOf(mov);
+          }}
+  \end{minted}
+  \caption{Enhanced greedy approach}
+  \label{enhanced}
+  \end{longlisting}
+\end {enumerate}
+
 \subsection{Motivation}
-The motivation behind this approach is mainly due to the composition of the deck. There is a total of 56 cards distributed among the players, both starting with 7 cards. Thus, there are only 46 turns, or 23 rounds to discard cards that do not fit one's strategy. Furthermore, only two "Malus" cards are present in the deck, for twice as many "Bonus" cards, therefore increasing the chances of countering a "Malus", which is unfavourable for an aggressive strategy. However, 6 "Map" cards are in the deck, thus composing almost a ninth of the deck, favouring a "rushing" strategy. Three "Destroy" cards can also compose the deck, which allow the destruction of a tile placed on the board, favourable for path building when one of the 9 dead-end tiles available in the deck are placed. The remaining 28 cards are "tunnel tiles" permitting route building in various directions.
+There were several other methods that were discussed before we started writing the code, including turning the game into a Constraint Satisfaction Problem (CSP), similar to the 4 queens problem we studied. However, due to the complexity of the Saboteur game, we believed that the CSP approach will not be feasible for us to achieve on time.
+\par There was also an attempted approach by Haoran Du of forming the game into a Minimax tree. However, the team decided to switch to the Local Search Optimization approach in the end based on the following reasons:
+\begin{enumerate}
+  \item the composition of the deck. There is a total of 56 cards distributed among the players, both starting with 7 cards. Thus, there are only 46 turns, or 23 rounds to discard cards that do not fit one's strategy. Furthermore, only two "Malus" cards are present in the deck, for twice as many "Bonus" cards, therefore increasing the chances of countering a "Malus", which is unfavourable for an aggressive strategy. However, 6 "Map" cards are in the deck, thus composing almost a ninth of the deck, favouring a "rushing" strategy. Three "Destroy" cards can also compose the deck, which allow the destruction of a tile placed on the board, favourable for path building when one of the 9 dead-end tiles available in the deck are placed. The remaining 28 cards are "tunnel tiles" permitting route building in various directions.
+
+\end{enumerate}
 \subsection{Theoretical Basis}
-\subsubsection{Local Optimization Search}
-\subsubsection{Constraint Satisfaction Problem (CSP)}
+\subsubsection{Hill Climbing}
+\subsubsection{Simulated Annealing}
+\subsubsection{Divide and Conquer}
 \clearpage
 
 \section{Summary of Result}
