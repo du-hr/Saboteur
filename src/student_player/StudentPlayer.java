@@ -107,10 +107,21 @@ public class StudentPlayer extends SaboteurPlayer {
                 return (new SaboteurMove(ownsMalus, 0, 0, myTurn));
             }else if (!discardInHand.isEmpty()){
                 justDiscarded = true;
-                return (new SaboteurMove(hand.get(discardInHand.get(0).intValue()), 0, 0, myTurn));
+                for (SaboteurMove mov : moves) {
+                    if (mov.getCardPlayed().getName().equals("Drop")) {
+                        for (String dTile : discardable) {
+                            if (cards.get(mov.getPosPlayed()[0]).getName().equals(dTile))
+                                return mov;
+                        }
+                    }
+                }
             }else{
                 justDiscarded = true;
-                return (new SaboteurMove(hand.get(0), 0, 0, myTurn));
+                for (SaboteurMove mov : moves) {
+                    if (mov.getCardPlayed().getName().equals("Drop")) {
+                        return mov;
+                    }
+                }
             }
         }
         //Check if critical zone entered
@@ -122,7 +133,14 @@ public class StudentPlayer extends SaboteurPlayer {
                 //choose whether to discard an undesired card probabilistically
                 if ((probabilityOfDiscarding >= probabilityOfPlacing && !justDiscarded && !discardInHand.isEmpty()) || usefulTiles.isEmpty()) {
                     justDiscarded = true;
-                    return (new SaboteurMove(hand.get(discardInHand.get(0).intValue()), 0, 0, myTurn));
+                    for (SaboteurMove mov : moves) {
+                        if (mov.getCardPlayed().getName().equals("Drop")) {
+                            for (String dTile : discardable) {
+                                if (cards.get(mov.getPosPlayed()[0]).getName().equals(dTile))
+                                    return mov;
+                            }
+                        }
+                    }
                 }
             }
             //If cannot discard or chose not to, strategy divided in two cases
@@ -157,10 +175,21 @@ public class StudentPlayer extends SaboteurPlayer {
             //If makes it here, then no move made regardless of whether the gold location has been found
             if (!discardInHand.isEmpty()){
                 justDiscarded = true;
-                return (new SaboteurMove(hand.get(discardInHand.get(0).intValue()), 0, 0, myTurn));
+                for (SaboteurMove mov : moves) {
+                    if (mov.getCardPlayed().getName().equals("Drop")) {
+                        for (String dTile : discardable) {
+                            if (cards.get(mov.getPosPlayed()[0]).getName().equals(dTile))
+                                return mov;
+                        }
+                    }
+                }
             }else{
                 justDiscarded = true;
-                return (new SaboteurMove(hand.get(0), 0, 0, myTurn));
+                for (SaboteurMove mov : moves) {
+                    if (mov.getCardPlayed().getName().equals("Drop")) {
+                        return mov;
+                    }
+                }
             }
         }
 
@@ -191,10 +220,21 @@ public class StudentPlayer extends SaboteurPlayer {
                         }
                         if (!discardInHand.isEmpty()){
                             justDiscarded = true;
-                            return (new SaboteurMove(hand.get(discardInHand.get(0).intValue()), 0, 0, myTurn));
+                            for (SaboteurMove mov : moves) {
+                                if (mov.getCardPlayed().getName().equals("Drop")) {
+                                    for (String dTile : discardable) {
+                                        if (cards.get(mov.getPosPlayed()[0]).getName().equals(dTile))
+                                            return mov;
+                                    }
+                                }
+                            }
                         }else{
                             justDiscarded = true;
-                            return (new SaboteurMove(hand.get(0), 0, 0, myTurn));
+                            for (SaboteurMove mov : moves) {
+                                if (mov.getCardPlayed().getName().equals("Drop")) {
+                                    return mov;
+                                }
+                            }
                         }
                     }
                 }
