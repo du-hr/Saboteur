@@ -109,14 +109,15 @@ for (SaboteurMove mov : moves) {
 \end {enumerate}
 
 \subsection{Motivation}
-There were several other methods that were discussed before we started writing the code, including turning the game into a Constraint Satisfaction Problem (CSP), similar to the 4 queens problem we studied. However, due to the complexity of the Saboteur game, we believed that the CSP approach will not be feasible for us to achieve on time.
-\par There was also an attempted approach by Haoran Du of forming the game into a Minimax tree. However, the team decided to switch to the Local Search Optimization approach in the end based on the following reasons:
+There were several other methods that were discussed before we started writing the code, including turning the game into a Constraint Satisfaction Problem (CSP), similar to the 4 queens problem we studied. However, due to the complexity of the Saboteur game, we believed that the CSP approach will not be feasible for us to achieve on time. There was also an attempted approach by Haoran Du of forming the game into a Minimax tree. In the end, the team decided to switch to the Local Search Optimization approach in the end based on the following reasons:
 \begin{enumerate}
-  \item the composition of the deck. There is a total of 56 cards distributed among the players, both starting with 7 cards. Thus, there are only 46 turns, or 23 rounds to discard cards that do not fit one's strategy. Furthermore, only two "Malus" cards are present in the deck, for twice as many "Bonus" cards, therefore increasing the chances of countering a "Malus", which is unfavourable for an aggressive strategy. However, 6 "Map" cards are in the deck, thus composing almost a ninth of the deck, favouring a "rushing" strategy. Three "Destroy" cards can also compose the deck, which allow the destruction of a tile placed on the board, favourable for path building when one of the 9 dead-end tiles available in the deck are placed. The remaining 28 cards are "tunnel tiles" permitting route building in various directions.
-
+  \item There is a total of 56 cards distributed among the players, both starting with 7 cards. Thus, there are only 46 turns, or 23 rounds to discard cards that do not fit one's strategy. Furthermore, only two Malus cards are present in the deck, for twice as many Bonus cards. It increases the chances of countering a Malus, which is unfavourable for an aggressive strategy. However, 6 Map cards are in the deck, thus composing almost a ninth of the deck, favouring a greedy strategy. Three Destroy cards can also compose the deck, which allow the destruction of a tile placed on the board, favourable for path building when one of the 9 dead-end tiles available in the deck are placed. The remaining 28 cards are tunnel tiles permitting route building in various directions.
+  \item We believe that in order to beat a random agent, the best move would be perform a Local Optimization each time after the enemy has played instead of planning a path from the beginning. We don't suppose a very complex approach or would have a lot more advantages than a greedy algorithm when facing something random.
+  \item The enemy is completely random rather than rational. Hence, it is almost impossible to make predictions to the next move of the enemy based on which card was played in the last round. This would make several approaches very hard, for example calculating heuristics of the move, or deciding the min/max agent in $\alpha - \beta$ pruning, if also considering the complexity of the moves or tiles.
 \end{enumerate}
 \subsection{Theoretical Basis}
 \subsubsection{Hill Climbing}
+sdafdsafdsfasd
 \subsubsection{Simulated Annealing}
 \subsubsection{Divide and Conquer}
 \clearpage
