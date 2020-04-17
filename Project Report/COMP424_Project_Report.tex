@@ -109,12 +109,46 @@ for (SaboteurMove mov : moves) {
 \end {enumerate}
 
 \subsection{Motivation}
-There were several other methods that were discussed before we started writing the code, including turning the game into a Constraint Satisfaction Problem (CSP), similar to the 4 queens problem we studied. However, due to the complexity of the Saboteur game, we believed that the CSP approach will not be feasible for us to achieve on time. There was also an attempted approach by Haoran Du of forming the game into a Minimax tree. In the end, the team decided to switch to the Local Search Optimization approach in the end based on the following reasons:
+There were several other methods that were discussed before the writing of the code, including turning the game into a Constraint Satisfaction Problem (CSP), similarly to the 4 queens problem we studied. However, due to the complexity of the Saboteur game, we believed that the time required for the CSP approach's implementation outweighed its potential performance.\par
+There was also an attempted approach by Haoran Du of forming the game into a Minimax tree. In the end, the team decided to switch to the Local Search Optimization approach in the end based on the following reasons:
 \begin{enumerate}
-  \item There is a total of 56 cards distributed among the players, both starting with 7 cards. Thus, there are only 46 turns, or 23 rounds to discard cards that do not fit one's strategy. Furthermore, only two Malus cards are present in the deck, for twice as many Bonus cards. It increases the chances of countering a Malus, which is unfavourable for an aggressive strategy. However, 6 Map cards are in the deck, thus composing almost a ninth of the deck, favouring a greedy strategy. Three Destroy cards can also compose the deck, which allow the destruction of a tile placed on the board, favourable for path building when one of the 9 dead-end tiles available in the deck are placed. The remaining 28 cards are tunnel tiles permitting route building in various directions.
+  \item There is a total of 56 cards distributed among the players, both starting with 7 cards. Thus, there are only 42 turns, or 21 rounds to discard cards that do not fit one's strategy. Furthermore, only two Malus cards are present in the deck, for twice as many Bonus cards. It increases the chances of countering a Malus, which is unfavourable for an aggressive strategy. However, 6 Map cards are in the deck, thus composing almost a ninth of the deck, favouring a greedy strategy. Three Destroy cards can also compose the deck, which allow the destruction of a tile placed on the board, favourable for path building when one of the 9 dead-end tiles available in the deck are placed. The remaining cards are tunnel tiles permitting route building in various directions.
   \item We believe that in order to beat a random agent, the best move would be perform a Local Optimization each time after the enemy has played instead of planning a path from the beginning. We don't suppose a very complex approach or would have a lot more advantages than a greedy algorithm when facing something random.
   \item The enemy is completely random rather than rational. Hence, it is almost impossible to make predictions to the next move of the enemy based on which card was played in the last round. This would make several approaches very hard, for example calculating heuristics of the move, or deciding the min/max agent in $\alpha - \beta$ pruning, if also considering the complexity of the moves or tiles.
 \end{enumerate}
+\par Further, another notable path that has been sought, although ultimately abandoned due to the AI's unsatisfactory behaviour following its implementation, was Cameron Cherif's attempt at applying simulated annealing.\\
+The goal was to make a function that would decrease from round 1 to 42, representing the probability of discarding a card versus placing a tile. A similar function for the probability of placing a tile has been made.\\
+For f(x) and g(x) being the probability of discarding a card and of placing tile respectively:\\
+$f(x) = -x^2/1764 +1$\\
+$g(x) = x^2/1764$\\
+The implementation of simulated annealing has been done as follows:
+\begin{longlisting}
+  \begin{minted}
+    [escapeinside=||,
+    frame=lines,
+    framesep=2mm,
+    baselinestretch=1.2,
+    linenos,
+    bgcolor=LightGray]
+    {java}
+    boolean canDiscard = boardState.getTurnNumber() < 42;
+    if(canDiscard) {
+      double probabilityOfDiscarding
+      = -Math.sqrt(boardState.getTurnNumber()
+      + numberOfCardsDiscarded - numberOfTilesPlaced
+      - discardInHand.size()) / 1764 + 1;
+      double probabilityOfPlacing
+      = Math.sqrt(boardState.getTurnNumber()
+      - numberOfTilesPlaced + numberOfCardsDiscarded + usefulTiles.size()) / 1764;
+      //choose whether to discard an undesired card probabilistically
+      if ((probabilityOfDiscarding
+       >= probabilityOfPlacing && !justDiscarded
+       && !discardInHand.isEmpty()) || usefulTiles.isEmpty()) {
+          justDiscarded = true;
+\end{minted}
+\caption{Simulated Annealing}
+\end{longlisting}
+
 \subsection{Theoretical Basis}
 \subsubsection{Hill Climbing}
  Hill climbing is a very powerful method using greedy algorithm to determine the local optimization of a problem. It basically compares the outcome of all its available neighbors and choose the best among them. It has the problem of stuck in a local maximum. In this project, all the cards in hand of the agent is considered neighbors. We used the local greedy search to choose the one that has the best chance to reaching down to the (potential) gold location. The details can be seen in Listing \ref{simple} and \ref{enhanced}.
@@ -123,14 +157,14 @@ Simulated Annealing is an improved version of Hill Climbing. It allows random no
 \subsubsection{Divide and Conquer}
 A divide-and-conquer algorithm works by recursively breaking down a problem into sub-problems, until these become simple enough to be solved directly. The solutions to the sub-problems are then combined to give a solution to the original problem. In this project, the use of the critical region divides the game into two sub-problems. The first one is that when being outside the critical region, we allow bad moves and simply going down using Listing \ref{simple}. The second one is that when being inside the critical region, we use a more dedicated approach to move as close and as fast to the gold tile as possible. This idea of Divide and Conquer makes the solution easier to approach.
 
-\section{Summary of Result}
+\section{Summary of Results}
 The result we obtained was satisfactory. We achieved a success rate of 33.33\% from our over 300 rounds of testing. we have satisfied all the requirements from the project specification document. The RAM we used is lower than 500 MB. The calculating time of our algorithm is smaller than 2 seconds. We did not use File I/O in out program.
 
-\section{Reflect and Future Improvement}
+\section{Reflections and Future Improvements}
 The implementation of this local optimization search approach permits a rapid progression and a fast recon of the coordinates of the goal. Furthermore, the different scenarios, depending on whether the goal is known and whether the critical region has been reached, allow the AI agent to choose among the different aspects of the greedy and aggressive strategy accordingly. Using a modified greedy algorithm as well as multiple conditions for analysis of the board and its development, speed and goal-achievement are favoured simultaneously. Additionally, discarding inconvenient cards quickly greatly increases one's chance of having a good hand early on in the game.
-\par However, the program does not fully take into account the Destroy cards, which can be extremely advantageous when the opponent's strategy is to sabotage our path progression. Moreover, grid analysis for road finding is not used, thus giving the disadvantage of not being able to predict a path towards the goal, rather only building a tunnel using the legal moves available in direction of its general location. The rudiment nature of the greedy algorithm, although bringing the advantage of speed and best move selection for the current turn, makes the possibility of a long-term approach unlikely to be opted for. For example, if the all the openings are blocked in the beginning by the enemy, the AI agent does not seek for breakthrough from the side, but to go up away from the goal. Ultimately, the biggest disadvantage of the program is the likeliness of never reaching the goal, regardless of whether its location has been revealed, due to the implementation of tile placement.
+\par However, the program does not fully take into account the Destroy cards, which can be extremely advantageous when the opponent's strategy is to sabotage our path progression. Moreover, grid analysis for road finding is not used, thus giving the disadvantage of not being able to predict a path towards the goal, rather only building a tunnel using the legal moves available in direction of its general location. The rudiment nature of the greedy algorithm, although bringing the advantage of speed and best move selection for the current turn, makes the possibility of a long-term approach unlikely to be opted for. For example, if the all the openings are blocked by the adversary in the first rounds, the AI agent does not seek an alternative path from the side, rather building away from the goal. Ultimately, the biggest disadvantage of the program is the likeliness of never reaching the goal, regardless of whether its location has been revealed, due to the implementation of tile placement.
 \par Accordingly, if time permits, we believe there are improvements could be done to drastically improve the performance. We could improve our greedy algorithm by adding more response based on the opponent's move. For example, if the enemy blocks a planned path leading to the gold nugget, a destroy card could be applied. Another issue could be improved is that, inside the critical region, we can add more calculation on best path leading to the tile based on the feature of the Tile cards. In that way, there would less erroneous placed cards in our path.
-
+\par Above all, a remarkably advantageous implementation in the future would be behaviour analysis of the opponent's gameplay, which would permit carrying out an adaptive strategy. As aforesaid, multiple types of strategies exist, and can be combined in different ways to obtain distinct behaviours. A human player would adapt their tactical approach in response to the adversary's, for instance using "Destroy" cards and putting dead-end tiles in a "rusher"'s path, or playing defensively against an aggressive player, etc. Thus, mimicking this evolutionary trait that is plasticity, and incorporating it in the AI, shall be a tremendous step towards enhancing its performance.
 \vfill
 \section*{Students' contributions}
 Both of student partners worked together to understand the problem and write the code in this project.
